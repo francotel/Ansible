@@ -1,0 +1,30 @@
+---
+# Essential tasks. should run on all nodes
+ - name: creating devops group
+   group: 
+     name=devops 
+     state=present
+
+ - name: create devops user
+   user: 
+     name=devops 
+     comment="Devops User" 
+     uid=2001 
+     group=devops
+
+ - name: upgrade all packages
+   apt: 
+     name=* 
+     state=latest
+
+ - name: install essentials package
+   apt: package={{item}} state=present update_cache=yes
+   with_items:
+
+       - vim
+       - wget
+       - curl
+       - nmap
+       - git
+       - unzip
+       - python-pip

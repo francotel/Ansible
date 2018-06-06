@@ -1,0 +1,10 @@
+---
+- hosts: nginx
+  remote_user: vagrant
+  become: yes
+  become_method: sudo
+  roles:
+   - base
+   - packer
+   - nginx
+

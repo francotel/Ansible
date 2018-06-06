@@ -1,0 +1,4 @@
+---
+# include playbook
+# - import_playbook: base.yml
+# - import_playbook: www.yml

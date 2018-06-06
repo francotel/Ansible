@@ -1,0 +1,39 @@
+---
+- hosts: all
+  remote_user: vagrant
+  become: true
+  become_method: sudo
+  tasks:
+  - name: create devops group
+    group:
+      name: devops
+      state: present
+  - name: create devops user with admin privileges
+    user:
+      name: devops
+      comment: "Devops Users"
+      uid: 2001
+      group: devops
+  - name: upgrade all packages
+    apt: name=* state=latest
+  - name: install htop package
+    action: apt name=htop state=present update_cache=yes
+
+- hosts: www, nginx
+  user: vagrant
+  become: true
+  become_method: sudo
+  tasks:
+  - name: add official nginx repository
+    apt_repository:
+       repo: 'deb http://nginx.org/packages/ubuntu/ lucid nginx'
+  - name: upgrade all packages
+    apt: name=* state=latest update_cache=yes
+  - name: install nginx web server and ensure its at the lastest version
+    action: apt name=nginx state=latest allow_unauthenticated=yes
+  - name: start nginx service
+    service:
+      name: nginx
+      state: started
+  - name: Copiando index.html
+    template: src=../files/index.html dest=/usr/share/nginx/html/index.html

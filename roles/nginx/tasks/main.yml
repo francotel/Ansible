@@ -1,0 +1,21 @@
+---
+# Instalar nginx
+
+  - name: add official nginx repository
+    apt_repository:
+       repo: 'deb http://nginx.org/packages/ubuntu/ lucid nginx'
+
+  - name: upgrade all packages
+    apt: name=* state=latest update_cache=yes
+
+  - name: install nginx web server and ensure its at the lastest version
+    action: apt name=nginx state=latest allow_unauthenticated=yes force=yes
+
+  - name: start nginx service
+    service:
+      name: nginx
+      state: started
+
+  - name: Copiando index.html
+    template: src=../files/index.html dest=/usr/share/nginx/html/index.html
+
