@@ -1,5 +1,5 @@
 ---
-- hosts: nginx
+- hosts: control
   remote_user: vagrant
   become: yes
   become_method: sudo
