@@ -1,13 +1,31 @@
 ## Install Docker ##
 
-- name: Install Docker
-  apt: name=docker state=present
 
-- name: add the user 'root' to 'docker' group
-  user:
-    name: root
-    groups: docker
-    append: yes
+- name: Check docker gpg key.
+  shell: apt-key fingerprint 0EBFCD88 | grep 0EBFCD88
+  register: docker_gpg
+  ignore_errors: True
+  changed_when: False
+
+- name: Add Docker’s official GPG key
+  shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+  when:
+    - docker_gpg is failed
+
+- name: Agregar repositorio
+  shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+
+- name: Install Docker CE
+  apt: name=docker-ce state=present update_cache=yes
+  notify:
+    - restart docker
+
+#- name: add the user 'root' to 'docker' group
+#  user:
+#    name: root
+#    groups: docker
+#    append: yes
 
 - name: chkconfig on
   service:
